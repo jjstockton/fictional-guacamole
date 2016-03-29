@@ -1,10 +1,9 @@
 <%-- 
-    Document   : main
     Created on : 27-Mar-2016, 7:15:52 PM
-    Author     : user
+    Author     : Jacob
 --%>
 
-<%@page import="org.mypackage.uwaterloo.Uwaterloo"%>
+<%@page import="org.uwaterloo.prereq.Message"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -19,7 +18,7 @@
             String key = System.getenv("API_KEY");
             String prereq = request.getParameter("prereq"); 
             String course = request.getParameter("course");
-            String text = Uwaterloo.isPrereqMsg(prereq, course,key);
+            String text = Message.isPrereqMsg(prereq, course,key);
         %>
     
         <%= text %>

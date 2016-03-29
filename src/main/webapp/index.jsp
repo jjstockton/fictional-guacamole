@@ -1,4 +1,3 @@
-<%@page import="org.mypackage.uwaterloo.Uwaterloo"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
