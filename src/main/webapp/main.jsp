@@ -3,7 +3,9 @@
     Author     : Jacob
 --%>
 
+
 <%@page import="org.uwaterloo.prereq.Message"%>
+<%@page import="org.heroku.log.Log"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -18,7 +20,15 @@
             String key = System.getenv("API_KEY");
             String prereq = request.getParameter("prereq"); 
             String course = request.getParameter("course");
-            String text = Message.isPrereqMsg(prereq, course,key);
+            String text;
+            try {
+                text = Message.isPrereqMsg(prereq, course, key);
+            }catch(Exception e){
+                text = e.toString();
+            }
+                    
+                
+            Log.logToDb(prereq,course,text);
         %>
     
         <%= text %>

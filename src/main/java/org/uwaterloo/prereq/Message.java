@@ -39,17 +39,12 @@ public class Message {
         // build a JSON object
         JSONObject obj = new JSONObject(str);
         String prereqsParsed = obj.getJSONObject("data").get("prerequisites_parsed").toString();
-        
-        //prereqsParsed = "[[1,[1,\"AFM372\",\"ACTSC391\"],[\"ACTSC231\",\"ACTSC371\"],[\"ACTSC231\",\"BUS393W\"]],[1,[\"STAT330\",\"STAT333\"],\"STAT334\"]]";
-        //(AFM 372/ACTSC 391 or(ACTSC 231&371)or(ACTSC 231&BUS 393W)), (STAT 333 or 334);
-        
-        
+       
         if(prereqsParsed.isEmpty()){
             return      prereq + " is not a prerequisite for " + course + "." + "<br>";
             
         }
         
-        //System.out.println(prereqsParsed);
         PrereqTree tree = new PrereqTree(prereqsParsed);
         
         if(isRequired(prereq,prereqsParsed)){
@@ -78,9 +73,6 @@ public class Message {
                 }
                 
             }
-            
-          
-            
             
             text += (prereq + " can be used" );
            
@@ -129,19 +121,16 @@ public class Message {
                 rawPrereqs += trees.get(i).rawPrereqs + ",";
             else
                 rawPrereqs += trees.get(i).rawPrereqs;
-            
         }
         
         rawPrereqs += "]";
-        //System.out.println("~~~" + rawPrereqs);
-        
+       
         return rawPrereqs;
         
     }
     
     public static String parsedToText(String prereqsParsed){
         
-        //System.out.println(prereqsParsed);
         
         if(prereqsParsed.isEmpty())
             return "";
@@ -152,8 +141,6 @@ public class Message {
         
         
        
-      
-       
         String conjunction;
         if(tree.numRequired == tree.courses.length)
             conjunction = " and ";
@@ -163,8 +150,8 @@ public class Message {
             conjunction = tree.numRequired + " of ";
         
         String text = "";
-        //if (conjunction.equals(" and "))
-            text = "(";
+
+        text = "(";
         
         for(int i = 0; i < tree.courses.length; i++){
 
@@ -174,8 +161,7 @@ public class Message {
                 text += parsedToText(tree.courses[i]);
         }
 
-        //if(conjunction.equals(" and "))
-            text += ")";
+        text += ")";
      
         
         
@@ -277,104 +263,6 @@ public class Message {
  
     }
     
-//    public static void isPrereq(String prereq, String course, String key) throws MalformedURLException, IOException{
-//        
-//        prereq = prereq.toUpperCase(); 
-//        course = course.toUpperCase();
-//        
-//        
-//        URL url = new URL("https://api.uwaterloo.ca/v2/courses/" + course.substring(0,course.indexOf(" ")) + "/" + course.substring(course.indexOf(" ") + 1) + "/prerequisites.json?key=" + key);
-//
-//            Scanner scan = new Scanner(url.openStream());
-//            String str = new String();
-//            while (scan.hasNext())
-//                str += scan.nextLine();
-//            scan.close();
-//
-//            // build a JSON object
-//            JSONObject obj = new JSONObject(str);
-//        String prereqsParsed = obj.getJSONObject("data").get("prerequisites_parsed").toString();
-//        
-//        Tree tree = new Tree(prereqsParsed);
-//    
-//        //System.out.println(prereqsParsed);
-//        prereq = prereq.replace(" ","");
-//        
-//        
-//        if(prereqsParsed.contains(prereq)){
-//            String location = Tree.getLocation(tree, prereq);
-//            boolean required = true;
-//            ArrayList<String> requiredWith = new ArrayList<>();
-//           // ArrayList<String> replaceWith = new ArrayList<>();
-//            
-//           // String requiredWith = "";
-//           // String replaceWith = "";
-//            
-//            Tree replaceWith = null;
-//            while(required && location.length() > 0){
-//
-//                
-//                location = location.substring(0,location.length() - 1);
-//                //System.out.println(location);
-//                Tree temp = getTree(tree,location);
-//
-//                //System.out.println(temp.numRequired + " vs " + temp.prereqTree.size());
-//                if(temp.numRequired != temp.courses.length){
-//                    
-//                    //System.out.println(temp.numRequired);
-//                    required = false;
-//                   
-//                    replaceWith = temp;
-//                    for(String crc : temp.courses){
-//                        //System.out.println(crc);
-//                    } 
-//                 //   replaceWith = temp.numRequired + " of ";
-//                    
-//                   
-//
-//                }else{
-//                    for(String crs : temp.courses){
-//                       
-//                        if(!crs.contains(prereq)) requiredWith.add(crs);
-//                        
-//                     //   if(!crs.contains(prereq)) requiredWith += crs + ",";
-//                    }
-//
-//   
-//                }
-//                
-//                
-//            }
-//            
-//            
-//
-//            if(required){
-//
-//                System.out.println(prereq + " is required for " + course + ".");
-//
-//            }else{
-//
-//                if(requiredWith.isEmpty()){
-//                    System.out.print(prereq + " can be used for " + course + ". Replace it with " + replaceWith.numRequired + " of ");
-//                    
-//                }else{                    
-//                    System.out.print(prereq + " can be used with " + requiredWith + " for " + course + ". Replace it with " + replaceWith.numRequired + " of ");
-//                    
-//                }
-//                
-//                for(String crs : replaceWith.courses){
-//                        //System.out.println(crs);
-//                        if(!crs.contains("\"" + prereq + "\"")) System.out.print(crs + ",");
-//                    }
-//                    System.out.println();
-//
-//
-//
-//            }
-//        }
-//
-//    }
-
 
     public static boolean isRequired(String prereq, String prereqsParsed) throws MalformedURLException, IOException{
         
@@ -382,7 +270,6 @@ public class Message {
         
         PrereqTree tree = new PrereqTree(prereqsParsed);
     
-        //System.out.println(prereqsParsed);
         if(!prereqsParsed.contains(prereq)) 
             return false;
         
@@ -418,11 +305,10 @@ public class Message {
         
         
     
-        //System.out.println(prereqsParsed);
+        
         if(!prereqsParsed.contains(prereq))
             return false;
-        
-        //System.out.println(tree.rawPrereqs + " - " + prereq);
+     
         ArrayList<String> locations = PrereqTree.getLocations(tree, prereq);
         
         for(String location : locations){
@@ -445,35 +331,6 @@ public class Message {
     }
 
 
-
-//    public static String getLastRequiredLocation(String prereq, String prereqsParsed){
-//        
-//         prereq = prereq.toUpperCase().replace(" ",""); 
-//        
-//        Tree tree = new Tree(prereqsParsed);
-//    
-//        //System.out.println(prereqsParsed);
-//        if(!prereqsParsed.contains(prereq)) return "-1";
-//        
-//
-//        String location = Tree.getLocation(tree, prereq);
-//       
-//
-//       String locationCopy; 
-//        while(location.length() > 0){
-//
-//            locationCopy = location;
-//            location = location.substring(0,location.length() - 1);
-//
-//            Tree temp = getTree(tree,location);
-//
-//            if(temp.numRequired != temp.courses.length)     return locationCopy;
-//
-//        }
-//        
-//        return "";
-//        
-//    }
     
     public static ArrayList<PrereqTree> getTrees(PrereqTree tree, ArrayList<String> locations){
         
@@ -495,10 +352,7 @@ public class Message {
     
     
     public static PrereqTree getTree(PrereqTree tree, String location){
-        
-        
-        //ArrayList<Tree> trees = new ArrayList<>();
-        
+      
         
         while(location.length() > 0){
 
@@ -518,7 +372,6 @@ public class Message {
         String line = null;
         ArrayList<String> courses = new ArrayList<>();
         while((line = br.readLine()) != null){
-            //System.out.println(line);
             courses.add(line);
         }
         
@@ -527,11 +380,9 @@ public class Message {
         
         int count = 0;
         for(String crs : courses){
-            //System.out.println(crc);
             String subject = crs.substring(0,crs.indexOf(" "));
             String code = crs.substring(crs.indexOf(" ") + 1);
             
-            //System.out.println(subject + " " + code);
             URL url = new URL("https://api.uwaterloo.ca/v2/courses/" + subject + "/" + code + "/prerequisites.json?key=" + key);
 
             Scanner scan = new Scanner(url.openStream());
@@ -547,14 +398,7 @@ public class Message {
             if (obj.getJSONObject("meta").getInt("status") == 200){
                 
                 String prereqs = obj.getJSONObject("data").get("prerequisites_parsed").toString();
-                //System.out.println(prereqs);
-                
-                //System.out.println(crs + ":  " + parsedToText(prereqs));
-                
-                
-                //System.out.println("-------");
-                //isPrereqMsg(course,crs);
-                //System.out.println("-------");
+               
                 if(prereqs.contains(course)){
                     
                 System.out.println("-------");
@@ -562,14 +406,12 @@ public class Message {
                 System.out.println("-------");
                     
                 }
-            }else{
-                //System.out.println(crc + " doesn't exist");
             }
-            if(count % 100 == 0){
+           
+            
+            if(count % 100 == 0)
                 System.out.println(count);
-                //break;
-            }
-        
+
             count++;
         }
         
@@ -636,8 +478,8 @@ public class Message {
                 courses.add(subject + " " + code);
 
 
-                FileWriter fw = new FileWriter("C:\\Users\\user\\Documents\\courses.txt",true); //the true will append the new data
-                fw.write(subject + " " + code + System.getProperty("line.separator"));//appends the string to the file
+                FileWriter fw = new FileWriter("C:\\Users\\user\\Documents\\courses.txt",true); 
+                fw.write(subject + " " + code + System.getProperty("line.separator"));
 
                 fw.close();
             }
