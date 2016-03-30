@@ -16,7 +16,8 @@ import org.joda.time.format.DateTimeFormat;
 public class Log {
     
     private static Connection getConnection() throws URISyntaxException, SQLException {
-        URI dbUri = new URI(System.getenv("API_KEY"));
+        
+        URI dbUri = new URI(System.getenv("DATABASE_URL"));
 
         String username = dbUri.getUserInfo().split(":")[0];
         String password = dbUri.getUserInfo().split(":")[1];
