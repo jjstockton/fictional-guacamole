@@ -13,6 +13,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,12 +24,23 @@ public class Message {
     
    public static String isPrereqMsg(String prereq, String course, String key) throws IOException, JSONException {
        
-        String text = "";
+       //verify that courses are valid
+       Pattern pattern = Pattern.compile("(?<subject>\\w{2,}+)\\s*(?<number>\\d{2,}+)");   
+       Matcher m1 = pattern.matcher(prereq);
+       Matcher m2 = pattern.matcher(course);
+       
+       
+       
+       if(!m1.matches() || !m2.matches()){
+           return "You didn't enter valid courses :(";
+       }
+       
+       String text = ""; 
         
         prereq = prereq.toUpperCase().replace(" ", ""); 
         course = course.toUpperCase();
         
-        URL url = new URL("https://api.uwaterloo.ca/v2/courses/" + course.substring(0,course.indexOf(" ")) + "/" + course.substring(course.indexOf(" ") + 1) + "/prerequisites.json?key=" + key);
+        URL url = new URL("https://api.uwaterloo.ca/v2/courses/" + m2.group("subject") +  "/" + m2.group("number") + "/prerequisites.json?key=" + key);
 
         String str;
         try (Scanner scan = new Scanner(url.openStream())) {
@@ -38,8 +51,18 @@ public class Message {
 
         // build a JSON object
         JSONObject obj = new JSONObject(str);
-        String prereqsParsed = obj.getJSONObject("data").get("prerequisites_parsed").toString();
+        
+        String prereqsParsed = "";
+        
+        
+        try {
+            prereqsParsed = obj.getJSONObject("data").get("prerequisites_parsed").toString();
        
+        } catch (JSONException e){
+            return prereq + " is not a prerequisite for " + course + "." + "<br>";
+        }
+        
+        
         if(prereqsParsed.isEmpty()){
             return      prereq + " is not a prerequisite for " + course + "." + "<br>";
             
@@ -89,10 +112,10 @@ public class Message {
             text += (" for " + course + ".") + "<br>";
             String replaceWithRaw = join(replaceWith,1);
             
-            text += ("Replace with ");
+            text += ("Don't want to take " + prereq + "? Take ");
            
           
-            text += (clean(parsedToText(replaceWithRaw)) + ".") + "<br>";
+            text += (clean(parsedToText(replaceWithRaw)) + " instead.") + "<br>";
             
           
            
