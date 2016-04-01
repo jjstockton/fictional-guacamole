@@ -1,13 +1,11 @@
 <%-- 
-    Created on : 27-Mar-2016, 7:15:52 PM
+    Created on : 31-Mar-2016, 10:28:03 PM
     Author     : Jacob
 --%>
 
-
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="org.uwaterloo.prereq.Message"%>
 <%@page import="database.log.Log"%>
-<%@page import="config.GetProperties"%>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -17,18 +15,15 @@
     <body>
         
         <% 
-            String key = GetProperties.getConfigVar("API_KEY");
-            String prereq = request.getParameter("prereq"); 
             String course = request.getParameter("course");
             String text;
             try {
-                text = Message.isPrereqMsg(prereq, course, key);
+                text = Message.getPrereqsTo(course);
             }catch(Exception e){
                 text = e.toString();
             }
-                    
-                
-            Log.logToDb(prereq,course,text);
+
+            Log.logFindPrereqsTo(course,text);
         %>
     
         <%= text %>

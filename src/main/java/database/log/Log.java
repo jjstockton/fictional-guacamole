@@ -1,5 +1,5 @@
 
-package org.heroku.log;
+package database.log;
 
 import config.GetProperties;
 import java.io.FileWriter;
@@ -19,7 +19,7 @@ import org.joda.time.format.DateTimeFormat;
 
 public class Log {
     
-    private static Connection getConnection() throws URISyntaxException, SQLException, IOException {
+    public static Connection getConnection() throws URISyntaxException, SQLException, IOException {
        
         String rawUrl = GetProperties.getConfigVar("DATABASE_URL");
 
@@ -52,6 +52,25 @@ public class Log {
         
         pstmt.executeUpdate();
         
+        
+    }
+    
+    public static void logFindPrereqsTo(String course, String response) throws ClassNotFoundException, URISyntaxException, SQLException, IOException{
+        
+        Class.forName("org.postgresql.Driver");
+        
+        Connection con = getConnection();
+        
+        DateTime date = (new DateTime()).withZone(DateTimeZone.forID("America/Toronto"));
+        
+        String insert = "insert into input_find_prereqs_to values(?,?,'" + DateTimeFormat.forPattern("yyyy-MM-dd HH:mm").print(date) + "');";
+        
+        PreparedStatement pstmt = con.prepareStatement(insert);
+        
+        pstmt.setString(1, course);
+        pstmt.setString(2, response);
+        
+        pstmt.executeUpdate();
         
     }
     

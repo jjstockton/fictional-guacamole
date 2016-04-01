@@ -11,8 +11,19 @@
             <br />
             Course 2: <input type="text" name="course" />
             <input type="submit" value="Submit" />
-            <br />
+             <br />
         </form>
+       
+            <br />
+            <br />
+         Or enter a course below to see all courses for which it is a prerequisite:
+         <br/>
+         <form action="getPrereqsTo.jsp" method="GET">
+            Course : <input type="text" name="course">
+            <input type="submit" value="Submit" />
+             <br />
+        </form>
+        
 
     </body>
 </html>

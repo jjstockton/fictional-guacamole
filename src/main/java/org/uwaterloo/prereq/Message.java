@@ -1,6 +1,7 @@
 
 package org.uwaterloo.prereq;
 
+import database.log.Log;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -9,8 +10,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -22,10 +28,49 @@ import org.json.JSONObject;
 public class Message {
     
     
+    public static String getPrereqsTo(String course) throws URISyntaxException, SQLException, IOException, ClassNotFoundException{
+        
+        course = course.toUpperCase().replace(" ", "");
+        
+        if(!isCourse(course))
+            return "You didn't enter valid courses :(";
+        
+        
+        
+        String text = "";
+        Class.forName("org.postgresql.Driver");
+        Connection con = Log.getConnection();
+        
+        Statement statement = con.createStatement();
+        
+        ResultSet rs = statement.executeQuery("select course,prereqs_parsed from prerequisites");
+        
+        while(rs.next()){
+            
+            if(rs.getString("prereqs_parsed").contains(course)){
+                text += rs.getString("course") + "<br>";
+                
+            }
+            
+        }
+        
+        return text;
+        
+    }
+    
+    
+    public static boolean isCourse(String course){
+        
+        Pattern pattern = Pattern.compile("(?<subject>\\w{2,})\\s*(?<number>\\d{2,}+\\w{0,1})"); 
+        
+        return pattern.matcher(course).matches();
+    }
+    
+    
    public static String isPrereqMsg(String prereq, String course, String key) throws IOException, JSONException {
        
        //verify that courses are valid
-       Pattern pattern = Pattern.compile("(?<subject>\\w{2,}+)\\s*(?<number>\\d{2,}+)");   
+       Pattern pattern = Pattern.compile("(?<subject>\\w{2,})\\s*(?<number>\\d{2,}+\\w{0,1})");  
        Matcher m1 = pattern.matcher(prereq);
        Matcher m2 = pattern.matcher(course);
        
@@ -42,6 +87,7 @@ public class Message {
         
         URL url = new URL("https://api.uwaterloo.ca/v2/courses/" + m2.group("subject") +  "/" + m2.group("number") + "/prerequisites.json?key=" + key);
 
+        
         String str;
         try (Scanner scan = new Scanner(url.openStream())) {
             str = new String();
@@ -51,6 +97,10 @@ public class Message {
 
         // build a JSON object
         JSONObject obj = new JSONObject(str);
+        
+        
+        if (obj.getJSONObject("meta").getInt("status") != 200)
+            return course + " doesn't exist :(";
         
         String prereqsParsed = "";
         
