@@ -72,6 +72,8 @@ public class Log {
         
         pstmt.executeUpdate();
         
+        con.close();
+        
     }
     
     

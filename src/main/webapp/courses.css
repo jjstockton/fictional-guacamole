@@ -1,0 +1,29 @@
+/* 
+    Created on : 2-Apr-2016, 12:02:57 AM
+    Author     : Jacob
+*/
+
+
+/* unvisited link */
+#course:link {
+    text-decoration: none;
+    color: rgb(128,128,128);
+   
+    
+}
+
+/* visited link */
+#course:visited {
+    text-decoration: none;
+    color: rgb(90,90,90);
+  
+    
+}
+
+/* mouse over link */
+#course:hover {
+    text-decoration: none;
+    color: black;
+ 
+   
+}

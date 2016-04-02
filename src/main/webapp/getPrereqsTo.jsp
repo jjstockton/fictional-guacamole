@@ -10,6 +10,8 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript" src="courses.js"></script>
+        <link rel="stylesheet" type="text/css" href="courses.css">
         <title>Courses</title>
     </head>
     <body>
@@ -26,6 +28,16 @@
             Log.logFindPrereqsTo(course,text);
         %>
     
-        <%= text %>
+        <div id="courses"><%= text %></div>
+        
+        <script>
+            
+            var text = document.getElementById("courses").innerHTML;
+            var output = formatCourses(text);
+            document.getElementById("courses").innerHTML = output;
+            
+        </script>
+        
+        
     </body>
 </html>
