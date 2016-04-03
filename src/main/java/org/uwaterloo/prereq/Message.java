@@ -39,7 +39,7 @@ public class Message {
         
         String text = "";
         Class.forName("org.postgresql.Driver");
-        Connection con = Log.getConnection();
+        Connection con = database.Connect.getConnection();
         
         Statement statement = con.createStatement();
         

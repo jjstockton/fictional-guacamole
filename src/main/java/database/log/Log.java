@@ -1,17 +1,13 @@
 
 package database.log;
 
-import config.GetProperties;
+import static database.Connect.getConnection;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
@@ -19,24 +15,12 @@ import org.joda.time.format.DateTimeFormat;
 
 public class Log {
     
-    public static Connection getConnection() throws URISyntaxException, SQLException, IOException {
-       
-        String rawUrl = GetProperties.getConfigVar("DATABASE_URL");
-
-
-        URI dbUri = new URI(rawUrl);
-
-        String username = dbUri.getUserInfo().split(":")[0];
-        String password = dbUri.getUserInfo().split(":")[1];
-        String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath() + "?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory";
-
-        return DriverManager.getConnection(dbUrl, username, password);
-}
+    
     
     
     
     public static void logToDb(String course1, String course2, String response) throws SQLException, URISyntaxException, ClassNotFoundException, IOException{
-        Class.forName("org.postgresql.Driver");
+        
         
         Connection con = getConnection();
         
@@ -57,7 +41,6 @@ public class Log {
     
     public static void logFindPrereqsTo(String course, String response) throws ClassNotFoundException, URISyntaxException, SQLException, IOException{
         
-        Class.forName("org.postgresql.Driver");
         
         Connection con = getConnection();
         

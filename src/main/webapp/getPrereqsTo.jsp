@@ -15,7 +15,7 @@
         <title>Courses</title>
     </head>
     <body>
-        
+             
         <% 
             String course = request.getParameter("course");
             String text;

@@ -10,7 +10,7 @@ import java.util.Properties;
 public class GetProperties {
     
     
-    public static String getConfigVar(String var) throws FileNotFoundException, IOException{
+    public static String getConfigVar(String var) {
         
         String value = null;
         if((value = System.getenv(var)) == null){
@@ -19,16 +19,20 @@ public class GetProperties {
 
             String s = System.getProperty("file.separator");
             
-            InputStream input = new FileInputStream(".." + s + ".." + s + "config.properties");
+            try {
+                InputStream input = new FileInputStream(".." + s + ".." + s + "config.properties");
 
-                // load a properties file
-            prop.load(input);
+                    // load a properties file
+                prop.load(input);
 
-                // get the property value
-            value = prop.getProperty(var);
-            
-                
-            input.close();
+                    // get the property value
+                value = prop.getProperty(var);
+
+
+                input.close();
+            }catch(IOException e){
+                System.err.println(e);
+            }
 
         }
         
